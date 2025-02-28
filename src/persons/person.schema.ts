@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-@Schema()
+@Schema({toJSON: {virtuals: true}, toObject: {virtuals: true}})
 class Person {
 
   @Prop({ required: true })
@@ -19,4 +19,9 @@ class Person {
 
 export type PersonDocument = HydratedDocument<Person>
 
+
 export const PersonSchema = SchemaFactory.createForClass(Person);
+
+PersonSchema.virtual('userName').get(function () {
+  return `${this.firstName}-${this.lastName}-the-${this.jobTitle}`.toLowerCase();
+})
